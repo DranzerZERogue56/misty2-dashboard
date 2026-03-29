@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Misty 2 Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────────────── -->
+<header>
+  <div class="logo">
+    <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="14" cy="14" r="13" stroke="currentColor" stroke-width="2"/>
+      <circle cx="10" cy="11" r="2.5" fill="currentColor"/>
+      <circle cx="18" cy="11" r="2.5" fill="currentColor"/>
+      <path d="M9 17.5 Q14 21 19 17.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+      <path d="M7 6 L5 3M21 6 L23 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    Misty 2
+  </div>
+
+  <div class="connect-bar">
+    <input id="ip-input" type="text" placeholder="Robot IP (e.g. 192.168.1.42)" autocomplete="off" spellcheck="false"/>
+    <button id="btn-connect" class="btn-connect">Connect</button>
+    <div id="status-dot" class="status-dot"></div>
+  </div>
+</header>
+
+<!-- ── Status Bar ─────────────────────────────────────────────────────── -->
+<div id="status-bar">
+  <span id="status-robot">Disconnected</span>
+  <span id="status-battery"></span>
+  <span style="margin-left:auto; color:var(--muted); font-size:11px;">
+    Drive: <kbd class="kbd">WASD</kbd> / <kbd class="kbd">↑↓←→</kbd> &nbsp; Stop: <kbd class="kbd">Space</kbd>
+  </span>
+</div>
+
+<!-- ── Controls ───────────────────────────────────────────────────────── -->
+<main>
+  <div id="controls" class="controls-disabled" style="display:contents">
+
+    <!-- Drive -->
+    <div class="card" id="card-drive">
+      <div class="card-title">Drive</div>
+      <div class="dpad">
+        <div class="dpad-empty"></div>
+        <button class="dpad-btn" id="btn-fwd">↑</button>
+        <div class="dpad-empty"></div>
+        <button class="dpad-btn" id="btn-left">←</button>
+        <button class="dpad-btn dpad-center" id="btn-stop">STOP</button>
+        <button class="dpad-btn" id="btn-right">→</button>
+        <div class="dpad-empty"></div>
+        <button class="dpad-btn" id="btn-back">↓</button>
+        <div class="dpad-empty"></div>
+      </div>
+      <p style="text-align:center; font-size:11px; color:var(--muted);">
+        Tap buttons or use <span class="kbd">WASD</span>
+      </p>
+    </div>
+
+    <!-- Head -->
+    <div class="card" id="card-head">
+      <div class="card-title">Head</div>
+      <div class="slider-row">
+        <span class="slider-label">Pitch</span>
+        <input id="head-pitch" type="range" min="-40" max="26" value="0"/>
+        <span class="slider-val" id="head-pitch-val">0°</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Roll</span>
+        <input id="head-roll" type="range" min="-40" max="40" value="0"/>
+        <span class="slider-val" id="head-roll-val">0°</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Yaw</span>
+        <input id="head-yaw" type="range" min="-81" max="81" value="0"/>
+        <span class="slider-val" id="head-yaw-val">0°</span>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="btn-head-center" style="margin-top:6px;">
+        Center Head
+      </button>
+    </div>
+
+    <!-- Arms -->
+    <div class="card" id="card-arms">
+      <div class="card-title">Arms</div>
+      <div class="slider-row">
+        <span class="slider-label">Left</span>
+        <input id="arm-left" type="range" min="-90" max="90" value="90"/>
+        <span class="slider-val" id="arm-left-val">90°</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Right</span>
+        <input id="arm-right" type="range" min="-90" max="90" value="90"/>
+        <span class="slider-val" id="arm-right-val">90°</span>
+      </div>
+      <div style="display:flex; gap:6px; margin-top:10px;">
+        <button class="btn btn-ghost btn-sm" onclick="
+          document.getElementById('arm-left').value=90;
+          document.getElementById('arm-right').value=90;
+          document.getElementById('arm-left-val').textContent='90°';
+          document.getElementById('arm-right-val').textContent='90°';
+          fetch('/api/arms',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({left:90,right:90})});
+        ">Down</button>
+        <button class="btn btn-ghost btn-sm" onclick="
+          document.getElementById('arm-left').value=-29;
+          document.getElementById('arm-right').value=-29;
+          document.getElementById('arm-left-val').textContent='-29°';
+          document.getElementById('arm-right-val').textContent='-29°';
+          fetch('/api/arms',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({left:-29,right:-29})});
+        ">Up</button>
+        <button class="btn btn-ghost btn-sm" onclick="
+          document.getElementById('arm-left').value=0;
+          document.getElementById('arm-right').value=0;
+          document.getElementById('arm-left-val').textContent='0°';
+          document.getElementById('arm-right-val').textContent='0°';
+          fetch('/api/arms',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({left:0,right:0})});
+        ">Mid</button>
+      </div>
+    </div>
+
+    <!-- Expressions -->
+    <div class="card" id="card-expressions">
+      <div class="card-title">Expressions</div>
+      <div class="expr-grid">
+        <button class="expr-btn" data-file="e_Joy.jpg"         data-name="Joy">
+          <span>😄</span>Joy
+        </button>
+        <button class="expr-btn" data-file="e_Sadness.jpg"     data-name="Sad">
+          <span>😢</span>Sad
+        </button>
+        <button class="expr-btn" data-file="e_Anger.jpg"       data-name="Anger">
+          <span>😠</span>Angry
+        </button>
+        <button class="expr-btn" data-file="e_Fear.jpg"        data-name="Fear">
+          <span>😨</span>Fear
+        </button>
+        <button class="expr-btn" data-file="e_Surprise.jpg"    data-name="Surprised">
+          <span>😲</span>Whoa
+        </button>
+        <button class="expr-btn" data-file="e_Love.jpg"        data-name="Love">
+          <span>😍</span>Love
+        </button>
+        <button class="expr-btn" data-file="e_Sleepy.jpg"      data-name="Sleepy">
+          <span>😴</span>Sleepy
+        </button>
+        <button class="expr-btn" data-file="e_DefaultContent.jpg" data-name="Default">
+          <span>😐</span>Default
+        </button>
+      </div>
+    </div>
+
+    <!-- LED -->
+    <div class="card" id="card-led">
+      <div class="card-title">Chest LED</div>
+      <div class="led-presets">
+        <div class="led-dot" title="White"  data-r="255" data-g="255" data-b="255" style="background:#fff"></div>
+        <div class="led-dot" title="Red"    data-r="255" data-g="0"   data-b="0"   style="background:#ef4444"></div>
+        <div class="led-dot" title="Orange" data-r="255" data-g="120" data-b="0"   style="background:#ff6b2b"></div>
+        <div class="led-dot" title="Yellow" data-r="255" data-g="220" data-b="0"   style="background:#f59e0b"></div>
+        <div class="led-dot" title="Green"  data-r="0"   data-g="200" data-b="80"  style="background:#22c55e"></div>
+        <div class="led-dot" title="Cyan"   data-r="0"   data-g="200" data-b="255" style="background:#06b6d4"></div>
+        <div class="led-dot" title="Blue"   data-r="30"  data-g="80"  data-b="255" style="background:#3b82f6"></div>
+        <div class="led-dot" title="Purple" data-r="160" data-g="40"  data-b="255" style="background:#a855f7"></div>
+        <div class="led-dot" title="Pink"   data-r="255" data-g="60"  data-b="160" style="background:#ec4899"></div>
+      </div>
+      <div class="led-custom">
+        <input type="color" id="led-color" value="#ff6b2b" title="Custom color"/>
+        <button class="btn btn-ghost btn-sm" id="btn-led-custom">Set Custom</button>
+        <button class="btn btn-ghost btn-sm" id="btn-led-off">Off</button>
+      </div>
+    </div>
+
+    <!-- Speech -->
+    <div class="card" id="card-speech">
+      <div class="card-title">Text to Speech</div>
+      <div class="speech-row" style="margin-bottom:10px;">
+        <input id="speak-input" type="text" placeholder="What should Misty say?" maxlength="200"/>
+        <button class="btn btn-primary" id="btn-speak">Speak</button>
+      </div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('speak-input').value='Hello! I am Misty.'; document.getElementById('btn-speak').click();">Hello</button>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('speak-input').value='I am happy to see you!'; document.getElementById('btn-speak').click();">Happy</button>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('speak-input').value='Goodbye! See you later.'; document.getElementById('btn-speak').click();">Bye</button>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('speak-input').value='Beep boop. I am a robot.'; document.getElementById('btn-speak').click();">Robot</button>
+      </div>
+    </div>
+
+    <!-- Camera -->
+    <div class="card" id="card-camera">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+        <span class="card-title" style="margin-bottom:0">Camera Feed</span>
+        <button class="btn btn-ghost btn-sm" id="btn-camera">Start Camera</button>
+      </div>
+      <div class="camera-wrap">
+        <img id="camera-img" alt="Robot camera feed"/>
+        <div id="camera-placeholder" style="display:flex; flex-direction:column; align-items:center;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M23 7l-7 5 7 5V7z"/>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+          </svg>
+          <span>Camera off</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Log -->
+    <div class="card" id="card-log">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+        <span class="card-title" style="margin-bottom:0">Event Log</span>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('log').innerHTML=''">Clear</button>
+      </div>
+      <div id="log"></div>
+    </div>
+
+  </div><!-- /controls -->
+</main>
+
+<script src="/static/js/dashboard.js"></script>
+</body>
+</html>
