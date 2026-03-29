@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>How to Connect — Misty 2 Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+  <style>
+    /* ── Instructions-specific styles ───────────────────────────── */
+    .page {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      margin-bottom: 28px;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--text); }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 36px;
+    }
+
+    /* Steps */
+    .steps { display: flex; flex-direction: column; gap: 16px; }
+
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .step-num {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-body h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .step-body p {
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.65;
+    }
+    .step-body p + p { margin-top: 6px; }
+
+    /* Methods grid */
+    .methods {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .method-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .method-card .method-icon { font-size: 22px; margin-bottom: 6px; }
+    .method-card h4 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .method-card p  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* Code / highlight */
+    code {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-family: 'Fira Code', monospace;
+      font-size: 12.5px;
+      color: var(--accent);
+    }
+
+    /* Callout */
+    .callout {
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 13px;
+      line-height: 1.6;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .callout-info    { background: #1a2236; border: 1px solid #2a4060; color: #93c5fd; }
+    .callout-warning { background: #241f10; border: 1px solid #4a3a10; color: #fbbf24; }
+    .callout-ok      { background: #102418; border: 1px solid #1a4028; color: #86efac; }
+    .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+    /* Section header */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin: 36px 0 14px;
+    }
+
+    /* Troubleshooting table */
+    .trouble-list { display: flex; flex-direction: column; gap: 10px; }
+    .trouble-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+    }
+    .trouble-item .problem {
+      font-weight: 600;
+      font-size: 13.5px;
+      color: var(--red);
+      margin-bottom: 5px;
+    }
+    .trouble-item .fix {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* Controls reference */
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .ctrl-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .ctrl-keys { display: flex; gap: 4px; flex-shrink: 0; }
+
+    @media (max-width: 540px) {
+      .controls-grid { grid-template-columns: 1fr; }
+      .step { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="14" cy="14" r="13" stroke="currentColor" stroke-width="2"/>
+      <circle cx="10" cy="11" r="2.5" fill="currentColor"/>
+      <circle cx="18" cy="11" r="2.5" fill="currentColor"/>
+      <path d="M9 17.5 Q14 21 19 17.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+      <path d="M7 6 L5 3M21 6 L23 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    Misty 2
+  </div>
+  <a href="/" style="font-size:12px; color:var(--muted); text-decoration:none; margin-left:auto;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">← Back to Dashboard</a>
+</header>
+
+<div class="page">
+
+  <a href="/" class="back-link">← Back to Dashboard</a>
+
+  <h1>How to Connect to Misty II</h1>
+  <p class="subtitle">Follow these steps to connect your laptop to the Misty II robot over WiFi.</p>
+
+  <!-- ── Before you start ─────────────────────────────────────────── -->
+  <div class="callout callout-info">
+    <span class="callout-icon">ℹ</span>
+    <span><strong>Before you start:</strong> Your laptop and Misty II must be connected to the <strong>same WiFi network</strong>. Misty communicates over your local network — this will not work if they are on different networks.</span>
+  </div>
+
+  <!-- ── Steps ────────────────────────────────────────────────────── -->
+  <p class="section-label">Setup Steps</p>
+  <div class="steps">
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Power on Misty II</h3>
+        <p>Press and hold the power button on Misty's back until you hear a startup sound and her eyes light up. Give her about 30–60 seconds to fully boot.</p>
+        <p>The chest LED will glow white when she is ready.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Connect Misty to WiFi</h3>
+        <p>If this is your first time, you need to connect Misty to your WiFi network using the <strong>Misty App</strong> (available on iOS and Android).</p>
+        <p>Open the app → tap <strong>Set Up Robot</strong> → follow the on-screen steps to join your WiFi. You only need to do this once.</p>
+        <div class="callout callout-warning" style="margin-top:10px;">
+          <span class="callout-icon">⚠</span>
+          <span>Use the <strong>same WiFi network</strong> that your laptop is on. Misty does not support 5 GHz-only networks — use 2.4 GHz or a dual-band network.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Find Misty's IP Address</h3>
+        <p>You need Misty's IP address to connect the dashboard. There are three ways to find it:</p>
+        <div class="methods">
+          <div class="method-card">
+            <div class="method-icon">📱</div>
+            <h4>Misty App (easiest)</h4>
+            <p>Open the Misty App, select your robot — her IP is shown at the top of the robot detail screen.</p>
+          </div>
+          <div class="method-card">
+            <div class="method-icon">🤖</div>
+            <h4>Ask Misty</h4>
+            <p>Double-tap the top of Misty's head. She will say her IP address out loud.</p>
+          </div>
+          <div class="method-card">
+            <div class="method-icon">📡</div>
+            <h4>Your Router</h4>
+            <p>Log in to your router's admin page and look for a device named <strong>Misty</strong> or <strong>MistyRobotics</strong> in the device list.</p>
+          </div>
+        </div>
+        <p style="margin-top:10px;">The IP will look something like <code>192.168.1.42</code> or <code>10.0.0.25</code>.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Enter the IP in the Dashboard</h3>
+        <p>Go back to the <a href="/" style="color:var(--accent);">Dashboard</a>, type Misty's IP address into the field in the top bar, and click <strong>Connect</strong>.</p>
+        <p>The status dot will turn <span style="color:var(--green); font-weight:600;">green</span> and you'll see a confirmation in the event log when the connection is successful.</p>
+        <div class="callout callout-ok" style="margin-top:10px;">
+          <span class="callout-icon">✓</span>
+          <span>You're connected! Use the panels to drive Misty, move her head and arms, change her expressions, make her speak, and more.</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Keyboard controls ─────────────────────────────────────────── -->
+  <p class="section-label">Keyboard Controls</p>
+  <div class="card" style="padding: 18px 20px;">
+    <div class="controls-grid">
+      <div class="ctrl-row">
+        <div class="ctrl-keys"><kbd class="kbd">W</kbd><kbd class="kbd">↑</kbd></div>
+        Drive forward
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-keys"><kbd class="kbd">S</kbd><kbd class="kbd">↓</kbd></div>
+        Drive backward
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-keys"><kbd class="kbd">A</kbd><kbd class="kbd">←</kbd></div>
+        Turn left
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-keys"><kbd class="kbd">D</kbd><kbd class="kbd">→</kbd></div>
+        Turn right
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-keys"><kbd class="kbd">Space</kbd></div>
+        Emergency stop
+      </div>
+    </div>
+    <p style="font-size:12px; color:var(--muted); margin-top:12px;">Hold a key to keep moving. Release to stop. Keyboard shortcuts are disabled when typing in a text box.</p>
+  </div>
+
+  <!-- ── Troubleshooting ────────────────────────────────────────────── -->
+  <p class="section-label">Troubleshooting</p>
+  <div class="trouble-list">
+
+    <div class="trouble-item">
+      <div class="problem">"Cannot reach robot. Check IP and WiFi."</div>
+      <div class="fix">
+        Your laptop can't find Misty at that IP. Check that: (1) the IP address is correct, (2) both devices are on the same WiFi network, (3) Misty is fully booted (chest LED is solid white), and (4) no firewall is blocking local network traffic.
+      </div>
+    </div>
+
+    <div class="trouble-item">
+      <div class="problem">"Connection timed out."</div>
+      <div class="fix">
+        Misty is reachable but not responding in time. She may still be booting — wait 30 seconds and try again. If the problem persists, try restarting Misty using the power button.
+      </div>
+    </div>
+
+    <div class="trouble-item">
+      <div class="problem">Connected but commands have no effect</div>
+      <div class="fix">
+        Misty may have a running skill that is blocking commands. Open the Misty App, go to <strong>Skills</strong>, and stop any running skills. Then retry.
+      </div>
+    </div>
+
+    <div class="trouble-item">
+      <div class="problem">Camera feed is black or not loading</div>
+      <div class="fix">
+        The camera feed requires a stable WiFi connection. Make sure Misty is within range of your router. If her camera is disabled by a running skill, stop it first via the Misty App.
+      </div>
+    </div>
+
+    <div class="trouble-item">
+      <div class="problem">Dashboard won't open / localhost:5000 not found</div>
+      <div class="fix">
+        The Python server isn't running. Double-click <code>start.bat</code> (Windows) or run <code>./start.sh</code> (Mac/Linux) in the project folder to start it.
+      </div>
+    </div>
+
+    <div class="trouble-item">
+      <div class="problem">Python not found on Windows</div>
+      <div class="fix">
+        Download Python 3.8+ from <strong>python.org/downloads</strong>. During installation, make sure to check <strong>"Add Python to PATH"</strong> before clicking Install. Then re-run <code>start.bat</code>.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────── -->
+  <div style="margin-top:48px; padding-top:24px; border-top:1px solid var(--border); text-align:center; color:var(--muted); font-size:12px;">
+    Misty 2 Dashboard &nbsp;·&nbsp; For more info visit
+    <a href="https://docs.mistyrobotics.com" target="_blank" rel="noopener" style="color:var(--accent);">docs.mistyrobotics.com</a>
+  </div>
+
+</div>
+</body>
+</html>

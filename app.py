@@ -29,6 +29,11 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/instructions")
+def instructions():
+    return render_template("instructions.html")
+
+
 @app.route("/api/connect", methods=["POST"])
 def connect():
     ip = (request.json or {}).get("ip", "").strip()
